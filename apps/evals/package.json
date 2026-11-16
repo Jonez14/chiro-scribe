@@ -1,0 +1,13 @@
+{
+  "name": "@chiro-scribe/evals",
+  "version": "0.1.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.8.0",
+    "@chiro-scribe/application": "workspace:*",
+    "@chiro-scribe/domain": "workspace:*",
+    "@chiro-scribe/extraction": "workspace:*"
+  }
+}

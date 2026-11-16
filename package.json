@@ -19,7 +19,8 @@
     "test": "pnpm build && vitest run",
     "test:watch": "vitest",
     "verify": "pnpm format:check && pnpm lint && pnpm test",
-    "forms": "node apps/onboarding/dist/cli.js"
+    "forms": "node apps/onboarding/dist/cli.js",
+    "eval": "node apps/evals/dist/cli.js"
   },
   "devDependencies": {
     "@eslint/js": "^9.0.0",

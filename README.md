@@ -28,6 +28,7 @@ The clinical core and voice corrections are built, with no UI and no network sur
 | `@chiro-scribe/form-engine` | Fills and inspects `.docx` (content controls) and `.pdf` (AcroForm) templates.                                                   |
 | `@chiro-scribe/extraction`  | Ports for transcription, extraction and edit interpretation. Anthropic Messages adapters for extraction and edit interpretation. |
 | `@chiro-scribe/onboarding`  | `scribe-forms` command: inspect a form file, draft a mapping, validate a mapping.                                                |
+| `@chiro-scribe/evals`       | Synthetic dictation suite scored against the live model.                                                                         |
 | `@chiro-scribe/application` | Use cases: draft from dictation, edit by voice, preview, export approved document.                                               |
 
 See [docs/roadmap.md](docs/roadmap.md) for what comes next and
@@ -52,6 +53,17 @@ pnpm forms validate path/to/form.docx template.json  # must pass before a templa
 ```
 
 Keep form files and mappings outside this repository. Use blank forms only.
+
+## Measure extraction accuracy
+
+Runs synthetic dictations through the live model and scores the drafts. Synthetic data only.
+
+```sh
+pnpm build
+ANTHROPIC_API_KEY=... EVAL_MODEL=<model id> pnpm eval
+```
+
+Exit code 0 means no unsafe fills (no wrong or unsupported values reached a draft).
 
 ## Ground rules
 
