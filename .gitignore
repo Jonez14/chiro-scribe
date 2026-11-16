@@ -1,0 +1,14 @@
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+.DS_Store
+
+# PHI guardrail: real patient material never belongs in this repository.
+# Real forms, dictations, transcripts and exports live outside the repo.
+/phi/
+/private/
+*.phi.*

@@ -1,0 +1,23 @@
+{
+  "name": "@chiro-scribe/domain",
+  "version": "0.1.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./testing": {
+      "types": "./dist/test-support/index.d.ts",
+      "default": "./dist/test-support/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "zod": "^3.23.0"
+  }
+}
