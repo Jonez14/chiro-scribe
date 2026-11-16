@@ -1,5 +1,6 @@
 import type { Evidence } from "./document.js";
 import { validateFieldValue, type FieldValue, type ValueRejection } from "./field-value.js";
+import { wordsContainNumber } from "./numeric-evidence.js";
 import { findField, type FieldDefinition, type TemplateDefinition } from "./template.js";
 
 /**
@@ -49,18 +50,14 @@ export function normalizeForMatching(text: string): string {
     .trim();
 }
 
-function containsNumber(haystack: string, value: number): boolean {
-  const tokens = haystack.match(/-?\d+(?:\.\d+)?/g) ?? [];
-  return tokens.some((token) => Number(token) === value);
-}
-
 /**
  * A number must be literally present in the quote, not merely implied by it.
  * Polarity (positive vs negative) and option picks are the extractor's reading of the quote,
  * which is why review always shows the quote beside the value.
  */
 function quoteCarriesValue(field: FieldDefinition, value: FieldValue, quotes: string): boolean {
-  if (field.type === "number" && typeof value === "number") return containsNumber(quotes, value);
+  if (field.type === "number" && typeof value === "number")
+    return wordsContainNumber(quotes, value);
   return true;
 }
 

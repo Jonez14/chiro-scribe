@@ -20,14 +20,14 @@ corrects by voice or keyboard, approves, and the finished document is filed to t
 
 ## Status
 
-Slice 1 (this commit) is the clinical core, with no UI and no network surface:
+The clinical core and voice corrections are built, with no UI and no network surface:
 
-| Package                     | Responsibility                                                                                                         |
-| --------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `@chiro-scribe/domain`      | Template model, field validation, grounding, completeness, edit operations, review lifecycle. Pure TypeScript, no I/O. |
-| `@chiro-scribe/form-engine` | Fills and inspects `.docx` (content controls) and `.pdf` (AcroForm) templates.                                         |
-| `@chiro-scribe/extraction`  | Ports for transcription, extraction and edit interpretation. Anthropic Messages adapter for extraction.                |
-| `@chiro-scribe/application` | Use cases: draft from dictation, preview, export approved document.                                                    |
+| Package                     | Responsibility                                                                                                                   |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `@chiro-scribe/domain`      | Template model, field validation, grounding, completeness, edit operations, review lifecycle. Pure TypeScript, no I/O.           |
+| `@chiro-scribe/form-engine` | Fills and inspects `.docx` (content controls) and `.pdf` (AcroForm) templates.                                                   |
+| `@chiro-scribe/extraction`  | Ports for transcription, extraction and edit interpretation. Anthropic Messages adapters for extraction and edit interpretation. |
+| `@chiro-scribe/application` | Use cases: draft from dictation, edit by voice, preview, export approved document.                                               |
 
 See [docs/roadmap.md](docs/roadmap.md) for what comes next and
 [docs/architecture.md](docs/architecture.md) for how it fits together.

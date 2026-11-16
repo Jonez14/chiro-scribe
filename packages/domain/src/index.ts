@@ -5,5 +5,7 @@ export * from "./edits.js";
 export * from "./field-value.js";
 export * from "./grounding.js";
 export * from "./lifecycle.js";
+export * from "./numeric-evidence.js";
+export * from "./voice-edits.js";
 export * from "./result.js";
 export * from "./template.js";

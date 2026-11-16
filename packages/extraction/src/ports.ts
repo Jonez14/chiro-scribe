@@ -1,4 +1,9 @@
-import type { EditOperation, ProposedField, TemplateDefinition } from "@chiro-scribe/domain";
+import type {
+  ClinicalDocument,
+  EditOperation,
+  ProposedField,
+  TemplateDefinition,
+} from "@chiro-scribe/domain";
 
 /**
  * Ports for everything that leaves our trust boundary. Each adapter talks to a vendor that
@@ -26,6 +31,8 @@ export interface Transcriber {
 
 export interface EditRequest {
   readonly template: TemplateDefinition;
+  /** Current values, so "remove the lumbar traction" can be resolved against what is there. */
+  readonly document: ClinicalDocument;
   /** A spoken or typed correction, e.g. "Change right cervical rotation to 55 degrees." */
   readonly instruction: string;
 }
