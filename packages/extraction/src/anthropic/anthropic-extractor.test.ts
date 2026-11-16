@@ -15,7 +15,7 @@ function clientReturning(content: Response["content"]) {
 const request = { template: lumbarDailyVisit, transcript: sampleDictation };
 
 describe("createAnthropicExtractor", () => {
-  it("forces the tool call, pins temperature to zero, and restricts field ids to the form", async () => {
+  it("forces the tool call, sends no sampling parameters, and restricts field ids to the form", async () => {
     const client = clientReturning([
       { type: "tool_use", name: "record_form_fields", input: { fields: [] } },
     ]);
@@ -23,7 +23,7 @@ describe("createAnthropicExtractor", () => {
 
     const sent = client.create.mock.calls[0]![0];
     expect(sent.model).toBe("model-under-test");
-    expect(sent.temperature).toBe(0);
+    expect(sent).not.toHaveProperty("temperature");
     expect(sent.tool_choice).toEqual({ type: "tool", name: "record_form_fields" });
     expect(sent.tools).toEqual([buildTool(lumbarDailyVisit)]);
     expect(JSON.stringify(sent.tools)).toContain(

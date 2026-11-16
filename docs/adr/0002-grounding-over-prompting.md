@@ -17,8 +17,9 @@ a proposal only if:
 3. for numbers, the number itself appears in the quoted words.
 
 Anything else is withheld from the document and surfaced to the reviewer as a rejected proposal.
-The extractor's tool schema also restricts field ids to the template, and the model runs at
-temperature 0 with a forced tool call.
+The extractor's tool schema also restricts field ids to the template, and the call forces that
+tool. The model's sampling temperature cannot be pinned (current models reject the parameter), so
+output can vary between runs. Grounding, not determinism, is what keeps the result safe.
 
 ## Consequences
 
