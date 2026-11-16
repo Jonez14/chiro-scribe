@@ -58,8 +58,9 @@ PHI travels, so fewer is better for a two-clinician practice.
 ## Open questions to close before choosing
 
 1. **Which Claude models are covered where?** Confirm on the AWS HIPAA Eligible Services page
-   which Bedrock models are in scope, and with Anthropic whether forced tool use on the Messages
-   API (what this project relies on) is an eligible feature on a HIPAA-ready organization.
+   which Bedrock models are in scope and whether structured outputs (what this project relies
+   on) are available there. With Anthropic direct, structured outputs are listed as covered on a
+   HIPAA-ready organization: confirm against the Implementation Guide.
 2. **Does the practice or the operator hold the accounts?** The BAA chain is practice (covered
    entity) to platform operator (business associate) to each vendor (subcontractor). Decide who
    the operator is as a legal entity before signing anything.

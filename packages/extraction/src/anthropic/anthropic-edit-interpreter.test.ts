@@ -5,9 +5,9 @@ import { ExtractionError } from "../ports.js";
 import { createAnthropicEditInterpreter } from "./anthropic-edit-interpreter.js";
 import type { MessagesClient } from "./messages-client.js";
 
-function clientReturning(input: unknown) {
+function clientReturning(output: unknown) {
   const create = vi.fn<MessagesClient["create"]>(() =>
-    Promise.resolve({ content: [{ type: "tool_use", name: "record_edits", input }] }),
+    Promise.resolve({ content: [{ type: "text", text: JSON.stringify(output) }] }),
   );
   return { create };
 }

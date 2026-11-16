@@ -1,10 +1,7 @@
 import { ExtractionError } from "../ports.js";
 
-export interface ToolDefinition {
-  name: string;
-  description: string;
-  input_schema: { type: "object"; required: string[]; properties: Record<string, unknown> };
-}
+/** A JSON Schema object. Every object in it must set additionalProperties to false. */
+export type JsonSchema = Record<string, unknown>;
 
 /**
  * The slice of the Anthropic Messages API these adapters need. Declared structurally so the
@@ -17,9 +14,8 @@ export interface MessagesClient {
     max_tokens: number;
     system: string;
     messages: { role: "user"; content: string }[];
-    tools: ToolDefinition[];
-    tool_choice: { type: "tool"; name: string };
-  }): Promise<{ content: readonly { type: string; name?: string; input?: unknown }[] }>;
+    output_config: { format: { type: "json_schema"; schema: JsonSchema } };
+  }): Promise<{ content: readonly { type: string; text?: string }[] }>;
 }
 
 export interface AnthropicConfig {
@@ -29,32 +25,34 @@ export interface AnthropicConfig {
   readonly maxTokens?: number;
 }
 
-export interface ToolCall {
+export interface JsonRequest {
   readonly system: string;
   readonly user: string;
-  readonly tool: ToolDefinition;
+  readonly schema: JsonSchema;
 }
 
 /**
- * One forced tool call. Returns the raw tool input for the caller to parse.
- * No sampling parameters are sent: current models reject `temperature`. Run-to-run variation is
- * therefore possible, and is contained by grounding in the domain, not by configuration.
+ * One request for JSON in a fixed shape (structured outputs). Returns the parsed JSON for the
+ * caller to validate.
+ *
+ * Current models reject sampling parameters and forced tool calls, so neither is sent. Output
+ * can vary between runs. That is contained by grounding in the domain, not by configuration.
  */
-export async function callTool(config: AnthropicConfig, call: ToolCall): Promise<unknown> {
+export async function requestJson(config: AnthropicConfig, request: JsonRequest): Promise<unknown> {
   const response = await config.client.create({
     model: config.model,
-    max_tokens: config.maxTokens ?? 4096,
-    system: call.system,
-    messages: [{ role: "user", content: call.user }],
-    tools: [call.tool],
-    tool_choice: { type: "tool", name: call.tool.name },
+    max_tokens: config.maxTokens ?? 8192,
+    system: request.system,
+    messages: [{ role: "user", content: request.user }],
+    output_config: { format: { type: "json_schema", schema: request.schema } },
   });
-  const block = response.content.find(
-    (candidate) => candidate.type === "tool_use" && candidate.name === call.tool.name,
-  );
-  if (!block) {
-    // Deliberately carries no response content: model output may echo PHI into logs.
-    throw new ExtractionError("Model returned no tool call.");
+  // The model may think first, so the answer is the text block, wherever it sits.
+  const text = response.content.find((block) => block.type === "text")?.text;
+  try {
+    if (text !== undefined) return JSON.parse(text) as unknown;
+  } catch {
+    // Truncated or malformed output falls through to the same failure.
   }
-  return block.input;
+  // Deliberately carries no response content: model output may echo PHI into logs.
+  throw new ExtractionError("Model returned no usable JSON.");
 }
