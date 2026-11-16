@@ -18,7 +18,7 @@ practice before handling any PHI.
 | Encryption in transit and at rest, managed keys                               | not built                        |
 | Backup, retention and deletion policy matched to state record-retention rules | not defined                      |
 
-Vendor selection is gated on BAA terms that are confirmed in writing, never assumed from
+Candidates and what each requires are in [vendors.md](vendors.md). Vendor selection is gated on BAA terms that are confirmed in writing, never assumed from
 marketing pages.
 
 ## Controls already in the design

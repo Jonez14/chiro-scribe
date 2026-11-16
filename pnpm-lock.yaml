@@ -30,6 +30,21 @@ importers:
         specifier: ^3.0.0
         version: 3.2.7(@types/node@22.20.5)
 
+  apps/evals:
+    dependencies:
+      '@anthropic-ai/sdk':
+        specifier: ^1.8.0
+        version: 1.8.0(zod@3.25.76)
+      '@chiro-scribe/application':
+        specifier: workspace:*
+        version: link:../../packages/application
+      '@chiro-scribe/domain':
+        specifier: workspace:*
+        version: link:../../packages/domain
+      '@chiro-scribe/extraction':
+        specifier: workspace:*
+        version: link:../../packages/extraction
+
   apps/onboarding:
     dependencies:
       '@chiro-scribe/domain':
