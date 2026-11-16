@@ -18,7 +18,8 @@
     "format:check": "prettier --check .",
     "test": "pnpm build && vitest run",
     "test:watch": "vitest",
-    "verify": "pnpm format:check && pnpm lint && pnpm test"
+    "verify": "pnpm format:check && pnpm lint && pnpm test",
+    "forms": "node apps/onboarding/dist/cli.js"
   },
   "devDependencies": {
     "@eslint/js": "^9.0.0",

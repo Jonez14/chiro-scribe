@@ -46,7 +46,11 @@ const extractor = scriptedExtractor([
 
 describe("visit to chart", () => {
   it("has a mapping that lines up with the form file", async () => {
-    expect(await auditBindings(template, await formFile())).toEqual({ unbound: [], unmapped: [] });
+    expect(await auditBindings(template, await formFile())).toEqual({
+      unbound: [],
+      mismatched: [],
+      unmapped: [],
+    });
   });
 
   it("drafts from dictation, withholds the invented finding, and flags the gap", async () => {
