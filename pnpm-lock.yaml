@@ -30,6 +30,15 @@ importers:
         specifier: ^3.0.0
         version: 3.2.7(@types/node@22.20.5)
 
+  apps/onboarding:
+    dependencies:
+      '@chiro-scribe/domain':
+        specifier: workspace:*
+        version: link:../../packages/domain
+      '@chiro-scribe/form-engine':
+        specifier: workspace:*
+        version: link:../../packages/form-engine
+
   packages/application:
     dependencies:
       '@chiro-scribe/domain':

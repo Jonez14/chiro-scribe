@@ -1,0 +1,14 @@
+{
+  "name": "@chiro-scribe/onboarding",
+  "version": "0.1.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "bin": {
+    "scribe-forms": "./dist/cli.js"
+  },
+  "dependencies": {
+    "@chiro-scribe/domain": "workspace:*",
+    "@chiro-scribe/form-engine": "workspace:*"
+  }
+}

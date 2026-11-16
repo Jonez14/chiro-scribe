@@ -1,6 +1,14 @@
-import type { ClinicalDocument, TemplateDefinition, TemplateFormat } from "@chiro-scribe/domain";
+import type {
+  ClinicalDocument,
+  FieldDefinition,
+  TemplateDefinition,
+  TemplateFormat,
+} from "@chiro-scribe/domain";
+import type { FormDiagnosis } from "./diagnosis.js";
+import { diagnoseDocx } from "./docx/diagnose-docx.js";
 import { docxFiller } from "./docx/docx-filler.js";
-import type { Assignment, FormFiller, TemplateSlot } from "./filler.js";
+import type { Assignment, FormFiller, SlotKind, TemplateSlot } from "./filler.js";
+import { diagnosePdf } from "./pdf/diagnose-pdf.js";
 import { pdfFiller } from "./pdf/pdf-filler.js";
 
 const fillers: Record<TemplateFormat, FormFiller> = { docx: docxFiller, pdf: pdfFiller };
@@ -28,12 +36,32 @@ export async function renderDocument(
   return fillerFor(template.format).fill(templateFile, toAssignments(template, document));
 }
 
+export function diagnoseForm(format: TemplateFormat, file: Uint8Array): Promise<FormDiagnosis> {
+  return format === "docx" ? diagnoseDocx(file) : diagnosePdf(file);
+}
+
+export interface KindMismatch {
+  readonly fieldId: string;
+  readonly fieldType: FieldDefinition["type"];
+  readonly slotKind: SlotKind;
+}
+
 export interface BindingAudit {
   /** Mapped fields with no matching slot in the file. Must be empty before a template goes live. */
   readonly unbound: readonly string[];
+  /** Fields bound to a slot that cannot hold their type. Must be empty too. */
+  readonly mismatched: readonly KindMismatch[];
   /** Slots in the file that no field maps to. Informational: likely unmapped form areas. */
   readonly unmapped: readonly TemplateSlot[];
 }
+
+/** Which slot kinds can physically hold each field type. */
+const compatible: Record<FieldDefinition["type"], readonly SlotKind[]> = {
+  text: ["text"],
+  number: ["text"],
+  checkbox: ["checkbox"],
+  choice: ["choice", "text"],
+};
 
 const key = (binding: TemplateSlot["binding"]) => JSON.stringify(binding);
 
@@ -43,10 +71,17 @@ export async function auditBindings(
   templateFile: Uint8Array,
 ): Promise<BindingAudit> {
   const slots = await fillerFor(template.format).inspect(templateFile);
-  const inFile = new Set(slots.map((slot) => key(slot.binding)));
+  const kinds = new Map(slots.map((slot) => [key(slot.binding), slot.kind]));
   const mapped = new Set(template.fields.map((field) => key(field.binding)));
-  return {
-    unbound: template.fields.filter((f) => !inFile.has(key(f.binding))).map((f) => f.id),
-    unmapped: slots.filter((slot) => !mapped.has(key(slot.binding))),
-  };
+
+  const unbound: string[] = [];
+  const mismatched: KindMismatch[] = [];
+  for (const field of template.fields) {
+    const slotKind = kinds.get(key(field.binding));
+    if (slotKind === undefined) unbound.push(field.id);
+    else if (!compatible[field.type].includes(slotKind)) {
+      mismatched.push({ fieldId: field.id, fieldType: field.type, slotKind });
+    }
+  }
+  return { unbound, mismatched, unmapped: slots.filter((slot) => !mapped.has(key(slot.binding))) };
 }

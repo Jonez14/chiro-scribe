@@ -27,6 +27,7 @@ The clinical core and voice corrections are built, with no UI and no network sur
 | `@chiro-scribe/domain`      | Template model, field validation, grounding, completeness, edit operations, review lifecycle. Pure TypeScript, no I/O.           |
 | `@chiro-scribe/form-engine` | Fills and inspects `.docx` (content controls) and `.pdf` (AcroForm) templates.                                                   |
 | `@chiro-scribe/extraction`  | Ports for transcription, extraction and edit interpretation. Anthropic Messages adapters for extraction and edit interpretation. |
+| `@chiro-scribe/onboarding`  | `scribe-forms` command: inspect a form file, draft a mapping, validate a mapping.                                                |
 | `@chiro-scribe/application` | Use cases: draft from dictation, edit by voice, preview, export approved document.                                               |
 
 See [docs/roadmap.md](docs/roadmap.md) for what comes next and
@@ -40,6 +41,17 @@ Requires Node 22 and pnpm 10.
 pnpm install
 pnpm verify   # format check, lint, build, tests
 ```
+
+## Onboard a form
+
+```sh
+pnpm build
+pnpm forms inspect  path/to/form.docx                # what is fillable, what still needs binding
+pnpm forms scaffold path/to/form.docx > draft.json   # a draft mapping to finish by hand
+pnpm forms validate path/to/form.docx template.json  # must pass before a template goes live
+```
+
+Keep form files and mappings outside this repository. Use blank forms only.
 
 ## Ground rules
 

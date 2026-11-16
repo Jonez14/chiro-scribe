@@ -1,3 +1,4 @@
+export * from "./diagnosis.js";
 export { docxFiller } from "./docx/docx-filler.js";
 export * from "./errors.js";
 export * from "./filler.js";
