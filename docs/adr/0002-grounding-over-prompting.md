@@ -17,9 +17,10 @@ a proposal only if:
 3. for numbers, the number itself appears in the quoted words.
 
 Anything else is withheld from the document and surfaced to the reviewer as a rejected proposal.
-The extractor's tool schema also restricts field ids to the template, and the call forces that
-tool. The model's sampling temperature cannot be pinned (current models reject the parameter), so
-output can vary between runs. Grounding, not determinism, is what keeps the result safe.
+The extractor also asks the model for JSON constrained to a schema whose field ids are limited to
+the template. Current models reject both a pinned sampling temperature and forced tool calls, so
+neither is used and output can vary between runs. Grounding, not determinism, is what keeps the
+result safe.
 
 ## Consequences
 
