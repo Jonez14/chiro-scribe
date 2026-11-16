@@ -15,7 +15,6 @@ export interface MessagesClient {
   create(request: {
     model: string;
     max_tokens: number;
-    temperature: number;
     system: string;
     messages: { role: "user"; content: string }[];
     tools: ToolDefinition[];
@@ -36,12 +35,15 @@ export interface ToolCall {
   readonly tool: ToolDefinition;
 }
 
-/** One forced, deterministic tool call. Returns the raw tool input for the caller to parse. */
+/**
+ * One forced tool call. Returns the raw tool input for the caller to parse.
+ * No sampling parameters are sent: current models reject `temperature`. Run-to-run variation is
+ * therefore possible, and is contained by grounding in the domain, not by configuration.
+ */
 export async function callTool(config: AnthropicConfig, call: ToolCall): Promise<unknown> {
   const response = await config.client.create({
     model: config.model,
     max_tokens: config.maxTokens ?? 4096,
-    temperature: 0,
     system: call.system,
     messages: [{ role: "user", content: call.user }],
     tools: [call.tool],
