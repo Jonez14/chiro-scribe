@@ -8,7 +8,9 @@ export interface Evidence {
 
 export type Provenance =
   | { readonly source: "dictation"; readonly evidence: readonly Evidence[] }
-  | { readonly source: "clinician_edit"; readonly actorId: string };
+  | { readonly source: "clinician_edit"; readonly actorId: string }
+  /** A spoken correction, interpreted by the pipeline. The instruction is kept as its evidence. */
+  | { readonly source: "voice_edit"; readonly actorId: string; readonly instruction: string };
 
 export type FieldState =
   | { readonly status: "empty" }

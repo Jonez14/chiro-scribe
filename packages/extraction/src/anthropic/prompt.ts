@@ -1,4 +1,5 @@
-import type { FieldDefinition, TemplateDefinition } from "@chiro-scribe/domain";
+import type { TemplateDefinition } from "@chiro-scribe/domain";
+import { describeFields } from "./field-catalog.js";
 
 export const SYSTEM_PROMPT = `You transcribe a chiropractor's dictation into the fields of their own clinical form.
 
@@ -10,29 +11,11 @@ Rules:
 - For a number, return the number exactly as dictated.
 - Use the clinician's own terminology. Do not add diagnoses, codes, or recommendations.`;
 
-function describeType(field: FieldDefinition): string {
-  switch (field.type) {
-    case "text":
-      return "text";
-    case "number":
-      return field.unit ? `number (${field.unit})` : "number";
-    case "checkbox":
-      return "checkbox: true or false";
-    case "choice":
-      return `one of: ${field.options.join(" | ")}`;
-  }
-}
-
-function describeField(field: FieldDefinition): string {
-  const guidance = field.guidance ? ` Note: ${field.guidance}` : "";
-  return `- ${field.id} [${field.section}] "${field.label}" (${describeType(field)}).${guidance}`;
-}
-
 export function buildUserMessage(template: TemplateDefinition, transcript: string): string {
   return [
     `Form: ${template.name}`,
     "Fields:",
-    ...template.fields.map(describeField),
+    ...describeFields(template),
     "",
     "Dictation:",
     "<dictation>",

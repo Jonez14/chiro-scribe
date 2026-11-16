@@ -21,5 +21,5 @@ export function applyGroundedFields(
 
 function clinicianOwned(state: FieldState): boolean {
   if (state.status === "intentionally_blank") return true;
-  return state.status === "filled" && state.provenance.source === "clinician_edit";
+  return state.status === "filled" && state.provenance.source !== "dictation";
 }

@@ -1,15 +1,16 @@
 import type { ProposedField, TemplateDefinition } from "@chiro-scribe/domain";
 import { z } from "zod";
+import type { ToolDefinition } from "./messages-client.js";
 
 export const TOOL_NAME = "record_form_fields";
 
 /** JSON Schema for the forced tool call. Field ids are an enum so the model cannot invent fields. */
-export function buildTool(template: TemplateDefinition) {
+export function buildTool(template: TemplateDefinition): ToolDefinition {
   return {
     name: TOOL_NAME,
     description: "Record the form fields that the dictation explicitly supports.",
     input_schema: {
-      type: "object" as const,
+      type: "object",
       required: ["fields"],
       properties: {
         fields: {

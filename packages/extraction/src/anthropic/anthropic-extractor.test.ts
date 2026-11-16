@@ -1,7 +1,9 @@
 import { lumbarDailyVisit, sampleDictation } from "@chiro-scribe/domain/testing";
 import { describe, expect, it, vi } from "vitest";
 import { ExtractionError } from "../ports.js";
-import { createAnthropicExtractor, type MessagesClient } from "./anthropic-extractor.js";
+import { createAnthropicExtractor } from "./anthropic-extractor.js";
+import type { MessagesClient } from "./messages-client.js";
+import { buildTool } from "./tool.js";
 
 type Response = Awaited<ReturnType<MessagesClient["create"]>>;
 
@@ -23,8 +25,9 @@ describe("createAnthropicExtractor", () => {
     expect(sent.model).toBe("model-under-test");
     expect(sent.temperature).toBe(0);
     expect(sent.tool_choice).toEqual({ type: "tool", name: "record_form_fields" });
-    expect(sent.tools[0]!.input_schema.properties.fields.items.properties.field_id.enum).toEqual(
-      lumbarDailyVisit.fields.map((field) => field.id),
+    expect(sent.tools).toEqual([buildTool(lumbarDailyVisit)]);
+    expect(JSON.stringify(sent.tools)).toContain(
+      JSON.stringify({ type: "string", enum: lumbarDailyVisit.fields.map((field) => field.id) }),
     );
     expect(sent.messages[0]!.content).toContain(sampleDictation);
   });

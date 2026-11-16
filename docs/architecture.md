@@ -47,10 +47,17 @@ therefore tri-state in practice: positive, negative, or not assessed. "Not menti
 recorded as "negative".
 
 **Provenance.** Every filled value records where it came from: dictation (with the supporting
-quotes) or a clinician edit (with the actor). Carried-forward history will be a third source,
+quotes), a typed clinician edit (with the actor), or a voice edit (with the actor and the spoken
+instruction). Carried-forward history will be a third source,
 always labelled as historical and never presented as reassessed.
 
 **Grounding.** See [ADR 0002](adr/0002-grounding-over-prompting.md).
+
+**Voice edits.** A spoken correction is interpreted by a model into edit operations, then checked
+by the domain before anything changes: fields must exist on the form, a number must have been
+spoken in the instruction, and values must pass the field's rules. The batch is all-or-nothing
+and returns a diff. An instruction that cannot be mapped is reported as not understood. Known
+limit: a rewritten text field cannot be verified word for word, which is why the diff is shown.
 
 **Lifecycle.** `drafting -> in_review -> approved -> filed`. Approval requires the clinician role
 and every required field either filled or deliberately left blank. Approved documents are frozen.
